@@ -1,5 +1,6 @@
 package ru.kudukhov.libraryapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class Book {
   private Integer publicationYear;
 
   @ManyToMany(mappedBy = "books")
+  @JsonIgnore
   private List<Author> authors = new ArrayList<>();
 
   public Book(Long id, String title, Integer publicationYear, List<Author> authors) {

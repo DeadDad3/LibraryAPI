@@ -17,10 +17,11 @@ public class TransactionController {
   }
 
   @PostMapping
-  public ResponseEntity<Transaction> createTransaction(@RequestParam Long bookId,
-      @RequestParam String readerPhone,
-      @RequestParam TransactionType type) {
-    Transaction transaction = transactionService.createTransaction(bookId, readerPhone, type);
+  public ResponseEntity<Transaction> createTransaction(
+      @RequestParam Long bookId,
+      @RequestParam String clientId,
+      @RequestParam TransactionType transactionType) {
+    Transaction transaction = transactionService.createTransaction(bookId, clientId, transactionType);
     return ResponseEntity.ok(transaction);
   }
 }

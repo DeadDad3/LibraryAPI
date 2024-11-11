@@ -1,5 +1,6 @@
 package ru.kudukhov.libraryapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -17,6 +18,7 @@ public class Author {
   @JoinTable(name = "author_books",
       joinColumns = @JoinColumn(name = "author_id"),
       inverseJoinColumns = @JoinColumn(name = "book_id"))
+  @JsonIgnore
   private List<Book> books = new ArrayList<>();
 
   public Author(Long id, String firstName, String lastName, LocalDate birthDate, List<Book> books) {

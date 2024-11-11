@@ -19,7 +19,7 @@ VALUES ('1234567890', 'John', 'Doe', 'Male', '1985-02-15'),
        ('0987654321', 'Jane', 'Smith', 'Female', '1990-08-24');
 
 -- Добавление транзакций
-INSERT INTO transaction (id, transaction_type, transaction_date_time, book_id, client_id)
-VALUES (1, 'BORROW', '2024-01-15 10:00:00', 1, '1234567890'),
-       (2, 'RETURN', '2024-01-20 15:00:00', 1, '1234567890'),
-       (3, 'BORROW', '2024-02-10 14:30:00', 2, '0987654321');
+INSERT INTO transaction (transaction_type, transaction_date_time, book_id, client_id)
+VALUES ('BORROW', '2024-01-15 10:00:00', 1, '1234567890'),
+       ('RETURN', '2024-01-20 15:00:00', 1, '1234567890'),
+       ('BORROW', '2024-02-10 14:30:00', 2, '0987654321');

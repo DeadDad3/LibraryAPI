@@ -21,16 +21,16 @@ public class TransactionService {
     this.readerRepository = readerRepository;
   }
 
-  public Transaction createTransaction(Long bookId, String readerPhone, TransactionType type) {
+  public Transaction createTransaction(Long bookId, String clientId, TransactionType transactionType) {
     Book book = bookRepository.findById(bookId)
         .orElseThrow(() -> new IllegalArgumentException("Book not found"));
-    Reader reader = readerRepository.findById(readerPhone)
-        .orElseThrow(() -> new IllegalArgumentException("Reader not found"));
+    Reader reader = readerRepository.findById(clientId)
+        .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
     Transaction transaction = new Transaction();
     transaction.setBook(book);
     transaction.setClient(reader);
-    transaction.setTransactionType(type);
+    transaction.setTransactionType(transactionType);
     transaction.setTransactionDateTime(LocalDateTime.now());
 
     return transactionRepository.save(transaction);
