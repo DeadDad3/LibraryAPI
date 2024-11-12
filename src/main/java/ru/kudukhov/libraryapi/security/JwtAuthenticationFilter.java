@@ -12,9 +12,15 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
 import java.io.IOException;
 
+/**
+ * Filter that checks if the request has a valid JWT token and if so, sets the authentication in the security context.
+ * <p>
+ * This filter intercepts every request and checks the Authorization header for a valid JWT token. If valid, the user
+ * is authenticated and set in the security context.
+ * </p>
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -27,38 +33,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     this.customUserDetailsService = customUserDetailsService;
   }
 
+  /**
+   * Intercepts the request to validate the JWT token and authenticate the user.
+   *
+   * @param request The HTTP request.
+   * @param response The HTTP response.
+   * @param filterChain The filter chain to pass the request through.
+   * @throws ServletException If an error occurs during the filter chain.
+   * @throws IOException If an I/O error occurs.
+   */
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
 
-    System.out.println("JwtAuthenticationFilter: Начало фильтрации запроса.");
-
     String token = getTokenFromRequest(request);
-    System.out.println("JwtAuthenticationFilter: Извлеченный токен - " + token);
 
     if (token != null && jwtTokenProvider.validateToken(token)) {
-      System.out.println("JwtAuthenticationFilter: Токен действителен.");
-
       String username = jwtTokenProvider.getUsername(token);
-      System.out.println("JwtAuthenticationFilter: Извлеченное имя пользователя - " + username);
-
       UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-      System.out.println("JwtAuthenticationFilter: Загрузка данных пользователя завершена.");
 
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
           userDetails, null, userDetails.getAuthorities());
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      System.out.println("JwtAuthenticationFilter: Аутентификация установлена для пользователя - " + username);
-    } else {
-      System.out.println("JwtAuthenticationFilter: Токен недействителен или отсутствует.");
     }
 
-    System.out.println("JwtAuthenticationFilter: Завершение фильтрации запроса.");
     filterChain.doFilter(request, response);
   }
 
+  /**
+   * Extracts the token from the Authorization header.
+   *
+   * @param request The HTTP request.
+   * @return The extracted token, or null if no token is found.
+   */
   private String getTokenFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

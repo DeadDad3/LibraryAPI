@@ -1,7 +1,14 @@
 package ru.kudukhov.libraryapi.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Response containing access and refresh tokens")
 public class TokenResponse {
+
+  @Schema(description = "Access token for the user", example = "eyJhb...")
   private String accessToken;
+
+  @Schema(description = "Refresh token for the user", example = "eyJhb...")
   private String refreshToken;
 
   public TokenResponse(String accessToken, String refreshToken) {

@@ -1,5 +1,7 @@
 package ru.kudukhov.libraryapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +13,7 @@ import ru.kudukhov.libraryapi.security.JwtTokenProvider;
 import ru.kudukhov.libraryapi.dto.LoginRequest;
 import ru.kudukhov.libraryapi.dto.TokenResponse;
 
+@Tag(name = "Authentication", description = "Endpoints for user authentication and token management")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -24,6 +27,7 @@ public class AuthController {
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
+  @Operation(summary = "Authenticate user and retrieve access and refresh tokens")
   @PostMapping("/login")
   public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
     try {
@@ -32,7 +36,7 @@ public class AuthController {
       );
 
       String accessToken = jwtTokenProvider.generateToken(authentication);
-      String refreshToken = jwtTokenProvider.generateRefreshToken(authentication); // Добавьте метод для создания refresh token
+      String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
       return ResponseEntity.ok(new TokenResponse(accessToken, refreshToken));
     } catch (AuthenticationException e) {
@@ -40,6 +44,7 @@ public class AuthController {
     }
   }
 
+  @Operation(summary = "Refresh access token using a refresh token")
   @PostMapping("/refresh")
   public ResponseEntity<TokenResponse> refresh(@RequestBody TokenResponse tokenResponse) {
     if (jwtTokenProvider.validateToken(tokenResponse.getRefreshToken())) {
