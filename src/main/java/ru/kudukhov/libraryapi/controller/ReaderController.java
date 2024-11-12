@@ -20,6 +20,7 @@ public class ReaderController {
   // Endpoint для получения самого читающего клиента
   @GetMapping("/top-reader")
   public ResponseEntity<Reader> getTopReader() {
+    System.out.println("Handling /api/top-reader request");
     Reader topReader = readerService.getTopReader();
     return ResponseEntity.ok(topReader);
   }
